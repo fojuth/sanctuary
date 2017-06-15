@@ -690,10 +690,7 @@
   //. > S.min('10', '2')
   //. '10'
   //. ```
-  function min(x, y) {
-    return Z.lte(x, y) ? x : y;
-  }
-  S.min = def('min', {a: [Z.Ord]}, [a, a, a], min);
+  S.min = def('min', {a: [Z.Ord]}, [a, a, a], Z.min);
 
   //# max :: Ord a => a -> a -> a
   //.
@@ -711,10 +708,7 @@
   //. > S.max('10', '2')
   //. '2'
   //. ```
-  function max(x, y) {
-    return Z.lte(x, y) ? y : x;
-  }
-  S.max = def('max', {a: [Z.Ord]}, [a, a, a], max);
+  S.max = def('max', {a: [Z.Ord]}, [a, a, a], Z.max);
 
   //# id :: Category c => TypeRep c -> c
   //.
@@ -1225,25 +1219,11 @@
   //. > S.takeWhile(S.even, [3, 3, 3, 7, 6, 3, 5, 4])
   //. []
   //. ```
-  function Array$takeWhile(pred, xs) {
-    var idx = 0;
-    while (idx < xs.length && pred(xs[idx])) idx += 1;
-    return xs.slice(0, idx);
-  }
-
-  function takeWhile(pred, xs) {
-    if (Array.isArray(xs)) return Array$takeWhile(pred, xs);
-    var done = false;
-    function takeWhileReducer(xs, x) {
-      return !done && pred(x) ? append(x, xs) : (done = true, xs);
-    }
-    return Z.reduce(takeWhileReducer, Z.empty(xs.constructor), xs);
-  }
   S.takeWhile =
   def('takeWhile',
       {f: [Z.Foldable, Z.Alternative]},
       [$.Predicate(a), f(a), f(a)],
-      takeWhile);
+      Z.takeWhile);
 
   //# dropWhile :: (Foldable f, Alternative f) => (a -> Boolean) -> f a -> f a
   //.
@@ -1257,25 +1237,11 @@
   //. > S.dropWhile(S.even, [3, 3, 3, 7, 6, 3, 5, 4])
   //. [3, 3, 3, 7, 6, 3, 5, 4]
   //. ```
-  function Array$dropWhile(pred, xs) {
-    var idx = 0;
-    while (idx < xs.length && pred(xs[idx])) idx += 1;
-    return xs.slice(idx);
-  }
-
-  function dropWhile(pred, xs) {
-    if (Array.isArray(xs)) return Array$dropWhile(pred, xs);
-    var done = false;
-    function dropWhileReducer(xs, x) {
-      return !done && pred(x) ? xs : (done = true, append(x, xs));
-    }
-    return Z.reduce(dropWhileReducer, Z.empty(xs.constructor), xs);
-  }
   S.dropWhile =
   def('dropWhile',
       {f: [Z.Foldable, Z.Alternative]},
       [$.Predicate(a), f(a), f(a)],
-      dropWhile);
+      Z.dropWhile);
 
   //. ### Combinator
 
@@ -3273,6 +3239,31 @@
 
   //. ### Array
 
+  //# size :: Foldable f => f a -> Integer
+  //.
+  //. Returns the number of elements of the given structure.
+  //.
+  //. ```javascript
+  //. > S.size([])
+  //. 0
+  //.
+  //. > S.size(['foo', 'bar', 'baz'])
+  //. 3
+  //.
+  //. > S.size(Nil)
+  //. 0
+  //.
+  //. > S.size(Cons('foo', Cons('bar', Cons('baz', Nil))))
+  //. 3
+  //.
+  //. > S.size(S.Nothing)
+  //. 0
+  //.
+  //. > S.size(S.Just('quux'))
+  //. 1
+  //. ```
+  S.size = def('size', {f: [Z.Foldable]}, [f(a), $.Integer], Z.size);
+
   //# append :: (Applicative f, Semigroup (f a)) => a -> f a -> f a
   //.
   //. Returns the result of appending the first argument to the second.
@@ -3283,20 +3274,20 @@
   //. > S.append(3, [1, 2])
   //. [1, 2, 3]
   //.
+  //. > S.append(3, Cons(1, Cons(2, Nil)))
+  //. Cons(1, Cons(2, Cons(3, Nil)))
+  //.
   //. > S.append([1], S.Nothing)
   //. Just([1])
   //.
   //. > S.append([3], S.Just([1, 2]))
   //. Just([1, 2, 3])
   //. ```
-  function append(x, xs) {
-    return Z.concat(xs, Z.of(xs.constructor, x));
-  }
   S.append =
   def('append',
       {f: [Z.Applicative, Z.Semigroup]},
       [a, f(a), f(a)],
-      append);
+      Z.append);
 
   //# prepend :: (Applicative f, Semigroup (f a)) => a -> f a -> f a
   //.
@@ -3308,20 +3299,20 @@
   //. > S.prepend(1, [2, 3])
   //. [1, 2, 3]
   //.
+  //. > S.prepend(1, Cons(2, Cons(3, Nil)))
+  //. Cons(1, Cons(2, Cons(3, Nil)))
+  //.
   //. > S.prepend([1], S.Nothing)
   //. Just([1])
   //.
   //. > S.prepend([1], S.Just([2, 3]))
   //. Just([1, 2, 3])
   //. ```
-  function prepend(x, xs) {
-    return Z.concat(Z.of(xs.constructor, x), xs);
-  }
   S.prepend =
   def('prepend',
       {f: [Z.Applicative, Z.Semigroup]},
       [a, f(a), f(a)],
-      prepend);
+      Z.prepend);
 
   //# joinWith :: String -> Array String -> String
   //.
@@ -3372,11 +3363,8 @@
   //. > S.elem(0, S.Nothing)
   //. false
   //. ```
-  function elem(x, xs) {
-    return Z.reduce(function(b, y) { return b || Z.equals(x, y); }, false, xs);
-  }
   S.elem =
-  def('elem', {a: [Z.Setoid], f: [Z.Foldable]}, [a, f(a), $.Boolean], elem);
+  def('elem', {a: [Z.Setoid], f: [Z.Foldable]}, [a, f(a), $.Boolean], Z.elem);
 
   //# find :: Foldable f => (a -> Boolean) -> f a -> Maybe a
   //.
@@ -3524,19 +3512,11 @@
   //. > S.pipe([S.splitOn(''), S.reverse, S.joinWith('')], 'abc')
   //. 'cba'
   //. ```
-  function reverse(foldable) {
-    //  Fast path for arrays.
-    if (Array.isArray(foldable)) return foldable.slice().reverse();
-    var F = foldable.constructor;
-    return Z.reduce(function(xs, x) { return Z.concat(Z.of(F, x), xs); },
-                    Z.empty(F),
-                    foldable);
-  }
   S.reverse =
   def('reverse',
       {f: [Z.Applicative, Z.Foldable, Z.Monoid]},
       [f(a), f(a)],
-      reverse);
+      Z.reverse);
 
   //# sort :: (Ord a, Applicative m, Foldable m, Monoid (m a)) => m a -> m a
   //.
@@ -3556,14 +3536,11 @@
   //. > S.sort([S.Left(4), S.Right(3), S.Left(2), S.Right(1)])
   //. [Left(2), Left(4), Right(1), Right(3)]
   //. ```
-  function sort(m) {
-    return sortBy(I, m);
-  }
   S.sort =
   def('sort',
       {a: [Z.Ord], m: [Z.Applicative, Z.Foldable, Z.Monoid]},
       [m(a), m(a)],
-      sort);
+      Z.sort);
 
   //# sortBy :: (Ord b, Applicative m, Foldable m, Monoid (m a)) => (a -> b) -> m a -> m a
   //.
@@ -3600,31 +3577,11 @@
   //. . {rank: 7, suit: 'spades'},
   //. . {rank: 5, suit: 'spades'} ]
   //. ```
-  function sortBy(f, m) {
-    var rs = Z.reduce(function(xs, x) {
-      var fx = f(x);
-      var lower = 0;
-      var upper = xs.length;
-      while (lower < upper) {
-        var idx = Math.floor((lower + upper) / 2);
-        if (Z.lte(xs[idx].fx, fx)) lower = idx + 1; else upper = idx;
-      }
-      xs.splice(lower, 0, {x: x, fx: fx});
-      return xs;
-    }, [], m);
-
-    var M = m.constructor;
-    var result = Z.empty(M);
-    for (var idx = 0; idx < rs.length; idx += 1) {
-      result = Z.concat(result, Z.of(M, rs[idx].x));
-    }
-    return result;
-  }
   S.sortBy =
   def('sortBy',
       {b: [Z.Ord], m: [Z.Applicative, Z.Foldable, Z.Monoid]},
       [Fn(a, b), m(a), m(a)],
-      sortBy);
+      Z.sortBy);
 
   //. ### Object
 
