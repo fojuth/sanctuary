@@ -55,6 +55,7 @@ release-major release-minor release-patch:
 .PHONY: setup
 setup:
 	$(NPM) install
+	tree node_modules/.bin
 
 
 .PHONY: test
