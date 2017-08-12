@@ -2,7 +2,6 @@ DOCTEST = node_modules/.bin/doctest --module commonjs --prefix .
 ESLINT = node_modules/.bin/eslint --config node_modules/sanctuary-style/eslint-es3.json --env es3
 ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
-REMARK = node_modules/.bin/remark --frail --no-stdout
 XYZ = node_modules/.bin/xyz --repo git@github.com:sanctuary-js/sanctuary.git --script scripts/prepublish
 
 
@@ -36,13 +35,7 @@ lint:
 	  --rule 'max-len: [off]' \
 	  -- test
 	node_modules/.bin/sanctuary-remember-bower
-	rm -f README.md
-	VERSION=0.0.0 make README.md
-	$(REMARK) \
-	  --use remark-lint-no-undefined-references \
-	  --use remark-lint-no-unused-definitions \
-	  -- README.md
-	git checkout README.md
+	node_modules/.bin/sanctuary-lint-readme
 	node_modules/.bin/sanctuary-lint-commit-message
 
 

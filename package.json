@@ -27,10 +27,7 @@
     "karma-mocha": "1.3.x",
     "karma-sauce-launcher": "1.1.x",
     "mocha": "3.x.x",
-    "remark-cli": "3.x.x",
-    "remark-lint-no-undefined-references": "1.x.x",
-    "remark-lint-no-unused-definitions": "1.x.x",
-    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#4d94ecbb026225af8107db7039958ac82579f7ec",
+    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#4412b067955b2107143b51ab80168180cc051e6a",
     "sanctuary-style": "0.5.x",
     "xyz": "2.0.x"
   },
