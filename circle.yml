@@ -1,5 +1,6 @@
 dependencies:
   override:
+    - npm install --global npm@3.x.x
     - sudo apt-get update
     - sudo apt-get install tree
     - printf '%s\n' color=false progress=false >.npmrc
@@ -10,8 +11,6 @@ dependencies:
 machine:
   node:
     version: 4
-  npm:
-    version: 3
 
 test:
   override:
