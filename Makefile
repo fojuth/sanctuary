@@ -3,7 +3,6 @@ ESLINT = node_modules/.bin/eslint --config node_modules/sanctuary-style/eslint-e
 ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
 REMARK = node_modules/.bin/remark --frail --no-stdout
-REMEMBER_BOWER = node_modules/.bin/remember-bower
 XYZ = node_modules/.bin/xyz --repo git@github.com:sanctuary-js/sanctuary.git --script scripts/prepublish
 
 
@@ -36,7 +35,7 @@ lint:
 	  --rule 'dot-notation: [error, {allowKeywords: true}]' \
 	  --rule 'max-len: [off]' \
 	  -- test
-	$(REMEMBER_BOWER) $(shell pwd)
+	node_modules/.bin/sanctuary-remember-bower
 	rm -f README.md
 	VERSION=0.0.0 make README.md
 	$(REMARK) \
@@ -44,7 +43,7 @@ lint:
 	  --use remark-lint-no-unused-definitions \
 	  -- README.md
 	git checkout README.md
-	scripts/commit-message
+	node_modules/.bin/sanctuary-lint-commit-message
 
 
 .PHONY: release-major release-minor release-patch
