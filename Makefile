@@ -54,8 +54,10 @@ release-major release-minor release-patch:
 
 .PHONY: setup
 setup:
+	$(NPM) --version
 	$(NPM) install
 	tree node_modules/.bin
+	tree node_modules/sanctuary-scripts
 
 
 .PHONY: test
