@@ -8,6 +8,8 @@ dependencies:
 machine:
   node:
     version: 4
+  npm:
+    version: 3
 
 test:
   override:
