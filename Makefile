@@ -4,7 +4,6 @@ ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
 REMARK = node_modules/.bin/remark --frail --no-stdout
 REMEMBER_BOWER = node_modules/.bin/remember-bower
-TRANSCRIBE = node_modules/.bin/transcribe
 XYZ = node_modules/.bin/xyz --repo git@github.com:sanctuary-js/sanctuary.git --script scripts/prepublish
 
 
@@ -13,20 +12,10 @@ all: LICENSE README.md
 
 .PHONY: LICENSE
 LICENSE:
-	cp -- '$@' '$@.orig'
-	sed 's/Copyright (c) .* Sanctuary/Copyright (c) $(shell git log --date=short --pretty=format:%ad | sort -r | head -n 1 | cut -d - -f 1) Sanctuary/' '$@.orig' >'$@'
-	rm -- '$@.orig'
+	node_modules/.bin/sanctuary-update-copyright-year
 
-README.md: README.md.tmp package.json scripts/version-urls
-	scripts/version-urls '$<' >'$@'
-
-.INTERMEDIATE: README.md.tmp
-README.md.tmp: index.js
-	$(TRANSCRIBE) \
-	  --heading-level 4 \
-	  --url 'https://github.com/sanctuary-js/sanctuary/blob/v$(VERSION)/{filename}#L{line}' \
-	  -- $^ \
-	| LC_ALL=C sed 's/<h4 name="\(.*\)#\(.*\)">\(.*\)\1#\2/<h4 name="\1.prototype.\2">\3\1#\2/' >'$@'
+README.md: index.js package.json
+	node_modules/.bin/sanctuary-generate-readme index.js
 
 
 .PHONY: lint
@@ -39,7 +28,7 @@ lint:
 	  -- index.js
 	$(ESLINT) \
 	  --env node \
-	  -- karma.conf.js scripts/version-urls
+	  -- karma.conf.js
 	$(ESLINT) \
 	  --env node \
 	  --global suite \

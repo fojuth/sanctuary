@@ -31,8 +31,8 @@
     "remark-lint-no-undefined-references": "1.x.x",
     "remark-lint-no-unused-definitions": "1.x.x",
     "remember-bower": "0.1.x",
+    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#da0f6bb337a6c387c2b9e390e5603acace220ac1",
     "sanctuary-style": "0.5.x",
-    "transcribe": "1.0.x",
     "xyz": "2.0.x"
   },
   "files": [
