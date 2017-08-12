@@ -1,5 +1,4 @@
 DOCTEST = node_modules/.bin/doctest --module commonjs --prefix .
-ESLINT = node_modules/.bin/eslint --config node_modules/sanctuary-style/eslint-es3.json --env es3
 ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
 XYZ = node_modules/.bin/xyz --repo git@github.com:sanctuary-js/sanctuary.git --script scripts/prepublish
@@ -18,16 +17,16 @@ README.md: index.js package.json
 
 .PHONY: lint
 lint:
-	$(ESLINT) \
+	node_modules/.bin/sanctuary-lint-es3 \
 	  --global define \
 	  --global module \
 	  --global require \
 	  --global self \
 	  -- index.js
-	$(ESLINT) \
+	node_modules/.bin/sanctuary-lint-es3 \
 	  --env node \
 	  -- karma.conf.js
-	$(ESLINT) \
+	node_modules/.bin/sanctuary-lint-es3 \
 	  --env node \
 	  --global suite \
 	  --global test \
