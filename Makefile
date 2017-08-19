@@ -36,8 +36,8 @@ lint:
 	  --rule 'max-len: [off]' \
 	  -- test
 	node_modules/.bin/sanctuary-check-required-files
-	node_modules/.bin/sanctuary-remember-bower
 	node_modules/.bin/sanctuary-lint-package-json '$(OWNER)' '$(NAME)'
+	node_modules/.bin/sanctuary-lint-bower-json
 	node_modules/.bin/sanctuary-lint-readme
 	node_modules/.bin/sanctuary-lint-commit-message
 
