@@ -1,7 +1,9 @@
+OWNER = sanctuary-js
+NAME = sanctuary
+
 DOCTEST = node_modules/.bin/doctest --module commonjs --prefix .
 ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
-XYZ = node_modules/.bin/xyz --repo git@github.com:sanctuary-js/sanctuary.git --script scripts/prepublish
 
 
 .PHONY: all
@@ -33,14 +35,16 @@ lint:
 	  --rule 'dot-notation: [error, {allowKeywords: true}]' \
 	  --rule 'max-len: [off]' \
 	  -- test
+	node_modules/.bin/sanctuary-check-required-files
 	node_modules/.bin/sanctuary-remember-bower
+	node_modules/.bin/sanctuary-lint-package-json '$(OWNER)' '$(NAME)'
 	node_modules/.bin/sanctuary-lint-readme
 	node_modules/.bin/sanctuary-lint-commit-message
 
 
 .PHONY: release-major release-minor release-patch
 release-major release-minor release-patch:
-	@$(XYZ) --increment $(@:release-%=%)
+	@node_modules/.bin/sanctuary-release $(@:release-%=%) '$(OWNER)' '$(NAME)'
 
 
 .PHONY: setup

@@ -26,8 +26,7 @@
     "karma-mocha": "1.3.x",
     "karma-sauce-launcher": "1.1.x",
     "mocha": "3.x.x",
-    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#80e33c1549f110461915628b644a1fb7d85ac2b0",
-    "xyz": "2.0.x"
+    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#bd991b1805908cb881d35d1823a15c3e000abf9f"
   },
   "files": [
     "/LICENSE",
