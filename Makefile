@@ -1,4 +1,3 @@
-DOCTEST = node_modules/.bin/doctest --module commonjs --prefix .
 ISTANBUL = node_modules/.bin/istanbul
 NPM = npm
 
@@ -12,6 +11,11 @@ LICENSE:
 
 README.md: index.js package.json
 	node_modules/.bin/sanctuary-generate-readme index.js
+
+
+.PHONY: doctest
+doctest:
+	node_modules/.bin/sanctuary-doctest index.js
 
 
 .PHONY: lint
@@ -54,8 +58,4 @@ setup:
 test:
 	$(ISTANBUL) cover node_modules/.bin/_mocha
 	$(ISTANBUL) check-coverage --branches 100
-ifeq ($(shell node --version | cut -d . -f 1),v6)
-	$(DOCTEST) -- index.js
-else
-	@echo '[WARN] Doctests are only run in Node v6.x.x (current version is $(shell node --version))' >&2
-endif
+	make doctest
