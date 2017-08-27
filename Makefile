@@ -1,7 +1,3 @@
-ISTANBUL = node_modules/.bin/istanbul
-NPM = npm
-
-
 .PHONY: all
 all: LICENSE README.md
 
@@ -35,12 +31,11 @@ release-major release-minor release-patch:
 
 .PHONY: setup
 setup:
-	$(NPM) --version
-	$(NPM) install
+	npm --version
+	npm install
 
 
 .PHONY: test
 test:
-	$(ISTANBUL) cover node_modules/.bin/_mocha
-	$(ISTANBUL) check-coverage --branches 100
+	node_modules/.bin/sanctuary-test
 	make doctest
