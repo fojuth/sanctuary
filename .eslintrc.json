@@ -3,21 +3,8 @@
   "extends": ["./node_modules/sanctuary-style/eslint-es3.json"],
   "overrides": [
     {
-      "files": ["index.js"],
-      "globals": {"define": false, "module": false, "require": false, "self": false}
-    },
-    {
       "files": ["karma.conf.js"],
       "env": {"node": true}
-    },
-    {
-      "files": ["test/**/*.js"],
-      "env": {"node": true},
-      "globals": {"suite": false, "test": false},
-      "rules": {
-        "dot-notation": ["error", {"allowKeywords": true}],
-        "max-len": ["off"]
-      }
     }
   ]
 }
