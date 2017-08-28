@@ -23,7 +23,7 @@
     "karma-browserify": "5.1.x",
     "karma-mocha": "1.3.x",
     "karma-sauce-launcher": "1.1.x",
-    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#8a0dd890732b7d24dd749b287baff2ea7d8bfbe2"
+    "sanctuary-scripts": "sanctuary-js/sanctuary-scripts#02ff51dfd31def83b70d47f2f9cb030b0790cc28"
   },
   "files": [
     "/LICENSE",
